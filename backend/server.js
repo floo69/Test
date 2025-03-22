@@ -11,9 +11,14 @@ const port = 3000;
 // Update CORS configuration - place this before any routes
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5179"], // Your frontend URLs
+    origin: [
+      "http://localhost:5175",
+      "http://localhost:5173",
+      "http://localhost:5179",
+    ], // Your frontend URLs
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -7,6 +7,7 @@ import ApplyModal from "../components/ApplyModal";
 import EditProfileModal from "../components/EditProfileModal";
 import axios from "axios";
 import SignUp from "../components/SignUp";
+import PlacementReports from "../components/student/PlacementReports";
 
 const studentSchema = z.object({
   email: z.string().email(),
@@ -25,6 +26,11 @@ const StudentPortal: React.FC = () => {
     company: string;
   } | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [currentStudent, setCurrentStudent] = useState({
+    id: "",
+    branch: "",
+    batch: "",
+  });
 
   const {
     register,
@@ -66,6 +72,26 @@ const StudentPortal: React.FC = () => {
   const handleApplyClick = (title: string, company: string) => {
     setSelectedInternship({ title, company });
     setIsApplyModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchCurrentStudent();
+    }
+  }, [isLoggedIn]);
+
+  const fetchCurrentStudent = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/students/current`,
+        {
+          withCredentials: true,
+        }
+      );
+      setCurrentStudent(response.data);
+    } catch (error) {
+      console.error("Error fetching current student:", error);
+    }
   };
 
   if (!isLoggedIn) {
@@ -209,6 +235,13 @@ const StudentPortal: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="col-span-2">
+          <PlacementReports
+            studentId={currentStudent.id}
+            studentBranch={currentStudent.branch}
+            studentBatch={currentStudent.batch}
+          />
         </div>
         <div>
           <div className="bg-white p-6 rounded-lg shadow-md mb-8">

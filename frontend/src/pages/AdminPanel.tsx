@@ -9,6 +9,7 @@ import ReviewInternships from "./admin/ReviewInternships";
 import GenerateReports from "./admin/GenerateReports";
 import axios from "axios";
 import AdminSignUp from "../components/AdminSignUp";
+import StudentManagement from "../components/admin/StudentManagement";
 
 const adminSchema = z.object({
   email: z.string().email(),
@@ -42,9 +43,10 @@ const AdminPanel: React.FC = () => {
     } catch (error) {
       console.error("Error logging in:", error);
       if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data?.error || 
-                           error.response?.data?.message ||
-                           "An error occurred during login. Please try again.";
+        const errorMessage =
+          error.response?.data?.error ||
+          error.response?.data?.message ||
+          "An error occurred during login. Please try again.";
         // You might want to add state for login error message
         setServerError(errorMessage);
       } else {
@@ -126,6 +128,8 @@ const AdminPanel: React.FC = () => {
     switch (activeTab) {
       case "manageUsers":
         return <ManageUsers />;
+      case "studentManagement":
+        return <StudentManagement />;
       case "approveCompanies":
         return <ApproveCompanies />;
       case "reviewInternships":
@@ -169,6 +173,12 @@ const AdminPanel: React.FC = () => {
           title="Manage Users"
           active={activeTab === "manageUsers"}
           onClick={() => setActiveTab("manageUsers")}
+        />
+        <TabButton
+          icon={<Users size={20} />}
+          title="Student Management"
+          active={activeTab === "studentManagement"}
+          onClick={() => setActiveTab("studentManagement")}
         />
         <TabButton
           icon={<Briefcase size={20} />}
